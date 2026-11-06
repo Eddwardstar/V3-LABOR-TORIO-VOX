@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080910">
+  <title>VOX V2 | Laboratory</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="background-grid"></div>
+  <div id="toast" class="toast"></div>
+
+  <!-- AUTENTICAÇÃO -->
+  <main id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <div class="logo-mark">V</div>
+      <p class="eyebrow">VOX RESEARCH DIVISION</p>
+      <h1>VOX <span>V2</span></h1>
+      <p class="muted">Acesso ao sistema de pesquisa.</p>
+
+      <form id="login-form">
+        <label>E-mail</label>
+        <input id="login-email" type="email" placeholder="seu@email.com" required>
+
+        <label>Senha</label>
+        <input id="login-password" type="password" placeholder="Sua senha" required>
+
+        <button class="primary-button" type="submit">ENTRAR NO SISTEMA</button>
+      </form>
+
+      <form id="register-form" class="hidden">
+        <label>Nome de usuário</label>
+        <input id="register-username" type="text" minlength="3" maxlength="20"
+          placeholder="Seu nome" required>
+
+        <label>E-mail</label>
+        <input id="register-email" type="email" placeholder="seu@email.com" required>
+
+        <label>Senha</label>
+        <input id="register-password" type="password" minlength="6"
+          placeholder="Mínimo de 6 caracteres" required>
+
+        <button class="primary-button" type="submit">CRIAR CONTA</button>
+      </form>
+
+      <form id="recovery-form" class="hidden">
+        <label>Seu e-mail</label>
+        <input id="recovery-email" type="email" placeholder="seu@email.com" required>
+        <button class="primary-button" type="submit">ENVIAR RECUPERAÇÃO</button>
+      </form>
+
+      <form id="new-password-form" class="hidden">
+        <label>Nova senha</label>
+        <input id="new-password" type="password" minlength="6"
+          placeholder="Nova senha" required>
+        <button class="primary-button" type="submit">SALVAR NOVA SENHA</button>
+      </form>
+
+      <p id="auth-message" class="auth-message" aria-live="polite"></p>
+
+      <div class="auth-links">
+        <button type="button" id="show-register">Criar conta</button>
+        <button type="button" id="show-login" class="hidden">Voltar ao login</button>
+        <button type="button" id="show-recovery">Esqueci minha senha</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- APLICAÇÃO -->
+  <div id="app" class="app hidden">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="small-logo">V</div>
+        <div>
+          <strong>VOX V2</strong>
+          <small>RESEARCH SYSTEM</small>
+        </div>
+      </div>
+
+      <p class="nav-label">MENU PRINCIPAL</p>
+      <nav>
+        <button class="nav-button active" data-page="home">⌂ <span>Início</span></button>
+        <button class="nav-button" data-page="character">◈ <span>Personagem</span></button>
+        <button class="nav-button" data-page="missions">◎ <span>Missões</span></button>
+        <button class="nav-button" data-page="anomalies">⌬ <span>Anomalias</span></button>
+        <button class="nav-button" data-page="universe">✧ <span>Universo</span></button>
+        <button class="nav-button" data-page="laboratory">⚗ <span>Laboratório</span></button>
+        <button class="nav-button" data-page="comics">▤ <span>Histórias</span></button>
+        <button class="nav-button" data-page="settings">⚙ <span>Configurações</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="connection"><span></span> SISTEMA ONLINE</div>
+        <button id="logout-button" class="logout-button">↪ Encerrar sessão</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">VOX / CENTRAL DE CONTROLE</p>
+          <h2 id="page-heading">Visão geral</h2>
+        </div>
+        <div class="user-chip">
+          <div class="user-avatar">V</div>
+          <div>
+            <strong id="username-display">Pesquisador</strong>
+            <small>MEMBRO DO SISTEMA</small>
+          </div>
+        </div>
+      </header>
+
+      <!-- INÍCIO -->
+      <section id="page-home" class="page active">
+        <div class="welcome-panel">
+          <div>
+            <p class="eyebrow">BEM-VINDO AO VOX</p>
+            <h1>O desconhecido<br>está <span>esperando.</span></h1>
+            <p class="muted">Explore anomalias, investigue dimensões e descubra o que existe além.</p>
+            <button class="primary-button compact" data-go="anomalies">EXPLORAR ANOMALIAS</button>
+          </div>
+          <div class="welcome-symbol">◈</div>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <span>EXPERIÊNCIA</span>
+            <strong id="xpValue">0 XP</strong>
+          </article>
+          <article class="stat-card">
+            <span>CRÉDITOS</span>
+            <strong id="creditsValue">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>ANOMALIAS</span>
+            <strong id="anomalyValue">0</strong>
+          </article>
+          <article class="stat-card">
+            <span>MISSÕES</span>
+            <strong id="missionValue">0</strong>
+          </article>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">PROGRESSÃO</p>
+            <h3>Seu desenvolvimento</h3>
+          </div>
+          <strong id="levelValue">NÍVEL 1</strong>
+        </div>
+        <div class="progress-track"><div id="xpBar"></div></div>
+        <p id="xpDescription" class="muted small-text">0 / 100 XP para o próximo nível</p>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">UNIDADE ESPECIAL</p>
+            <h3>Projeto Eddward</h3>
+          </div>
+        </div>
+        <div id="eddward-stage" class="three-stage"></div>
+      </section>
+
+      <!-- PERSONAGEM -->
+      <section id="page-character" class="page">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">IDENTIDADE</p>
+            <h3>Selecione seu personagem</h3>
+          </div>
+        </div>
+
+        <div id="character-list" class="character-grid"></div>
+
+        <div class="character-controls">
+          <label class="toggle-label">
+            <input id="corrupted-toggle" type="checkbox">
+            <span>Exibir versão corrompida</span>
+          </label>
+          <p id="character-description" class="muted">Escolha um personagem.</p>
+        </div>
+        <div id="character-stage" class="three-stage character-stage"></div>
+      </section>
+
+      <!-- MISSÕES -->
+      <section id="page-missions" class="page">
+        <p class="eyebrow">OPERAÇÕES DISPONÍVEIS</p>
+        <h3>Missões do laboratório</h3>
+        <div class="mission-grid">
+          <article class="mission-card">
+            <span class="mission-tag">INICIAL</span>
+            <h3>Primeiro contato</h3>
+            <p>Explore o sistema e registre sua presença.</p>
+            <strong>+30 XP · +15 créditos</strong>
+            <button class="primary-button compact mission-button" data-mission="first">INICIAR</button>
+          </article>
+          <article class="mission-card">
+            <span class="mission-tag">INVESTIGAÇÃO</span>
+            <h3>Sinal desconhecido</h3>
+            <p>Analise um sinal vindo de uma dimensão desconhecida.</p>
+            <strong>+50 XP · +25 créditos</strong>
+            <button class="primary-button compact mission-button" data-mission="signal">INICIAR</button>
+          </article>
+          <article class="mission-card">
+            <span class="mission-tag">PESQUISA</span>
+            <h3>Registro anômalo</h3>
+            <p>Faça sua primeira análise de anomalia.</p>
+            <strong>+70 XP · +35 créditos</strong>
+            <button class="primary-button compact mission-button" data-mission="anomaly">INICIAR</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- ANOMALIAS -->
+      <section id="page-anomalies" class="page">
+        <p class="eyebrow">ARQUIVO CLASSIFICADO</p>
+        <h3>Catálogo de anomalias</h3>
+        <div class="anomaly-grid">
+          <article class="anomaly-card">
+            <div class="anomaly-icon">◉</div>
+            <span>ANOMALIA 001</span>
+            <h3>O Observador</h3>
+            <p>Uma presença que parece acompanhar os movimentos do pesquisador.</p>
+            <button class="secondary-button inspect-button" data-anomaly="observer">INVESTIGAR</button>
+          </article>
+          <article class="anomaly-card">
+            <div class="anomaly-icon">⌁</div>
+            <span>ANOMALIA 002</span>
+            <h3>Sinal Perdido</h3>
+            <p>Uma transmissão que não possui origem identificada.</p>
+            <button class="secondary-button inspect-button" data-anomaly="signal">INVESTIGAR</button>
+          </article>
+          <article class="anomaly-card">
+            <div class="anomaly-icon">◇</div>
+            <span>ANOMALIA 003</span>
+            <h3>Fragmento</h3>
+            <p>Um objeto encontrado entre duas realidades.</p>
+            <button class="secondary-button inspect-button" data-anomaly="fragment">INVESTIGAR</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- UNIVERSO -->
+      <section id="page-universe" class="page">
+        <p class="eyebrow">MAPEAMENTO DIMENSIONAL</p>
+        <h3>Universo conhecido</h3>
+        <div class="universe-panel">
+          <div id="universe-stage" class="three-stage"></div>
+          <div class="dimension-list">
+            <div><strong>ELYNDRA</strong><span>Floresta encantada</span></div>
+            <div><strong>AQUELYA</strong><span>Reino das sereias</span></div>
+            <div><strong>NEONIX</strong><span>Dimensão futurística</span></div>
+            <div><strong>AETHERIA</strong><span>Ilhas flutuantes</span></div>
+            <div><strong>UMBRYA</strong><span>Dimensão das sombras</span></div>
+            <div><strong>FLORAVELLE</strong><span>Natureza mágica</span></div>
+            <div><strong>CRYON</strong><span>Reino de gelo</span></div>
+            <div><strong>IGNARA</strong><span>Dimensão de fogo</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LABORATÓRIO -->
+      <section id="page-laboratory" class="page">
+        <p class="eyebrow">ANÁLISE CIENTÍFICA</p>
+        <h3>Laboratório de pesquisa</h3>
+        <div class="lab-panel">
+          <div class="scanner">⌬</div>
+          <h3>Scanner de anomalias</h3>
+          <p class="muted">Inicie uma varredura experimental.</p>
+          <button id="analyze-button" class="primary-button">INICIAR ANÁLISE</button>
+          <div id="analysis-result" class="analysis-result">Aguardando comando...</div>
+        </div>
+      </section>
+
+      <!-- HISTÓRIAS -->
+      <section id="page-comics" class="page">
+        <p class="eyebrow">ARQUIVO NARRATIVO</p>
+        <h3>Histórias e registros</h3>
+        <div class="comic-grid">
+          <article class="comic-card">
+            <div class="comic-cover">VOX<br><span>001</span></div>
+            <h3>O início</h3>
+            <p>O primeiro registro do projeto.</p>
+          </article>
+          <article class="comic-card">
+            <div class="comic-cover purple">VOX<br><span>002</span></div>
+            <h3>Além do sinal</h3>
+            <p>Uma transmissão atravessa a realidade.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- CONFIGURAÇÕES -->
+      <section id="page-settings" class="page">
+        <p class="eyebrow">SISTEMA</p>
+        <h3>Configurações da conta</h3>
+        <div class="settings-panel">
+          <p>Usuário: <strong id="settings-username">—</strong></p>
+          <p>E-mail: <strong id="settings-email">—</strong></p>
+          <p>Personagem: <strong id="settings-character">Edward</strong></p>
+          <button id="settings-logout" class="secondary-button">SAIR DA CONTA</button>
+        </div>
+      </section>
+
+      <footer>VOX V2 · RESEARCH DIVISION · SISTEMA EXPERIMENTAL</footer>
+    </main>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

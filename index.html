@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080910">
   <title>VOX V2 | Laboratory</title>
+
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
 
@@ -81,6 +84,7 @@
       </div>
 
       <p class="nav-label">MENU PRINCIPAL</p>
+
       <nav>
         <button class="nav-button active" data-page="home">⌂ <span>Início</span></button>
         <button class="nav-button" data-page="character">◈ <span>Personagem</span></button>
@@ -246,8 +250,33 @@
       <section id="page-universe" class="page">
         <p class="eyebrow">MAPEAMENTO DIMENSIONAL</p>
         <h3>Universo conhecido</h3>
+
         <div class="universe-panel">
-          <div id="universe-stage" class="three-stage"></div>
+
+          <div class="earth-map-heading">
+            <div>
+              <p class="eyebrow">MAPA GLOBAL</p>
+              <h3>Superfície terrestre</h3>
+            </div>
+            <span class="map-status">MAPA EXPERIMENTAL</span>
+          </div>
+
+          <p class="muted">
+            Explore o mapa e procure pontos de interesse.
+            As anomalias serão elementos fictícios do universo VOX.
+          </p>
+
+          <div
+            id="earth-map"
+            class="earth-map"
+            role="application"
+            aria-label="Mapa interativo da Terra">
+          </div>
+
+          <div id="map-info" class="map-info" aria-live="polite">
+            Selecione um ponto de investigação no mapa quando ele estiver disponível.
+          </div>
+
           <div class="dimension-list">
             <div><strong>ELYNDRA</strong><span>Floresta encantada</span></div>
             <div><strong>AQUELYA</strong><span>Reino das sereias</span></div>
@@ -258,6 +287,7 @@
             <div><strong>CRYON</strong><span>Reino de gelo</span></div>
             <div><strong>IGNARA</strong><span>Dimensão de fogo</span></div>
           </div>
+
         </div>
       </section>
 
@@ -308,6 +338,7 @@
     </main>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="script.js"></script>
 </body>
 </html>

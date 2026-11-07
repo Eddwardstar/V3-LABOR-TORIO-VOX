@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@500;600;700;800&display=swap');
 
 :root {
@@ -582,17 +583,83 @@ button {
   margin-bottom: 15px;
 }
 
-/* UNIVERSO */
+/* UNIVERSO E MAPA */
 
 .universe-panel {
   margin-top: 20px;
+}
+
+.earth-map-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0 12px;
+}
+
+.earth-map-heading h3 {
+  font: 600 18px Orbitron, sans-serif;
+}
+
+.map-status {
+  padding: 8px 12px;
+  border: 1px solid rgba(103, 230, 177, .25);
+  border-radius: 7px;
+  background: rgba(103, 230, 177, .07);
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.earth-map {
+  width: 100%;
+  height: 480px;
+  margin-top: 18px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: #111522;
+  box-shadow:
+    0 0 35px rgba(105, 73, 190, .12),
+    inset 0 0 30px rgba(0, 0, 0, .2);
+}
+
+.earth-map:empty::before {
+  content: "AGUARDANDO CONEXÃO COM O MAPA...";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--purple-light);
+  font: 600 11px Orbitron, sans-serif;
+  letter-spacing: 2px;
+}
+
+.map-info {
+  min-height: 65px;
+  margin-top: 12px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: linear-gradient(110deg, #151323, #10121d);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.map-info strong {
+  color: var(--purple-light);
 }
 
 .dimension-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-top: 15px;
+  margin-top: 22px;
 }
 
 .dimension-list div {
@@ -600,6 +667,13 @@ button {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 9px;
+  transition: .2s;
+}
+
+.dimension-list div:hover {
+  border-color: rgba(155, 114, 255, .5);
+  background: var(--panel-light);
+  transform: translateY(-2px);
 }
 
 .dimension-list strong, .dimension-list span {
@@ -615,6 +689,100 @@ button {
   color: var(--muted);
   font-size: 11px;
   margin-top: 7px;
+}
+
+/* PERSONALIZAÇÃO DO LEAFLET */
+
+.earth-map .leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: #111522;
+  font-family: Inter, sans-serif;
+}
+
+.earth-map .leaflet-control-zoom {
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.earth-map .leaflet-control-zoom a {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  color: var(--purple-light);
+  background: #10121d;
+  border-color: var(--border);
+}
+
+.earth-map .leaflet-control-zoom a:hover {
+  color: white;
+  background: #29203f;
+}
+
+.earth-map .leaflet-control-attribution {
+  background: rgba(8, 9, 16, .8);
+  color: #aaa;
+  font-size: 9px;
+}
+
+.earth-map .leaflet-control-attribution a {
+  color: var(--purple-light);
+}
+
+.earth-map .leaflet-popup-content-wrapper,
+.earth-map .leaflet-popup-tip {
+  background: #151323;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.earth-map .leaflet-popup-content {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.earth-map .leaflet-popup-content strong {
+  color: var(--purple-light);
+}
+
+.earth-map .leaflet-popup-close-button {
+  color: white !important;
+}
+
+.earth-map .leaflet-bar a {
+  background: #10121d;
+  color: var(--purple-light);
+}
+
+/* MARCADORES DE ANOMALIA */
+
+.anomaly-marker {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #d5c4ff;
+  border-radius: 50%;
+  background: rgba(155, 114, 255, .8);
+  color: white;
+  box-shadow:
+    0 0 10px #9b72ff,
+    0 0 25px rgba(155, 114, 255, .7);
+  animation: anomaly-pulse 2s infinite;
+}
+
+@keyframes anomaly-pulse {
+  0%, 100% {
+    box-shadow: 0 0 8px #9b72ff, 0 0 15px rgba(155, 114, 255, .4);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow: 0 0 15px #c3a9ff, 0 0 30px rgba(155, 114, 255, .8);
+    transform: scale(1.12);
+  }
 }
 
 /* LABORATÓRIO */
@@ -763,6 +931,10 @@ footer {
   .mission-grid, .anomaly-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .earth-map {
+    height: 420px;
+  }
 }
 
 @media (max-width: 650px) {
@@ -838,5 +1010,23 @@ footer {
 
   .auth-card {
     padding: 25px;
+  }
+
+  .earth-map-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .earth-map {
+    height: 350px;
+    border-radius: 10px;
+  }
+
+  .map-info {
+    padding: 13px;
+  }
+
+  .lab-panel {
+    padding: 24px 16px;
   }
 }

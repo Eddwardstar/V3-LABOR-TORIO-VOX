@@ -339,6 +339,7 @@ async function loadAccount(user) {
   showApplication();
 
   initScenes();
+  initEarthMap();
 
   if (!authReady) {
     authReady = true;
@@ -531,6 +532,135 @@ $("#corrupted-toggle").addEventListener("change", async (event) => {
 });
 
 /* =========================================
+   MAPA INTERATIVO DA TERRA — LEAFLET
+   Pontos de anomalia são ficcionais dentro do VOX.
+========================================= */
+
+let earthMap = null;
+const earthMarkers = new Map();
+
+const fictionalAnomalies = [
+  {
+    id: "iceland-signal",
+    name: "Sinal de Reykjavík",
+    place: "Islândia",
+    coords: [64.1466, -21.9426],
+    description: "Uma interferência violeta aparece nos registros do VOX. Fenômeno fictício do jogo.",
+    rewardXP: 20,
+    rewardCredits: 10
+  },
+  {
+    id: "sahara-fragment",
+    name: "Fragmento do Saara",
+    place: "Deserto do Saara",
+    coords: [23.4162, 25.6628],
+    description: "Um fragmento de energia foi detectado nesta região. Anomalia fictícia do VOX.",
+    rewardXP: 25,
+    rewardCredits: 12
+  },
+  {
+    id: "pacific-observer",
+    name: "O Observador",
+    place: "Oceano Pacífico",
+    coords: [0, -150],
+    description: "Um sinal desconhecido parece surgir do oceano. Evento fictício do VOX.",
+    rewardXP: 30,
+    rewardCredits: 15
+  }
+];
+
+function initEarthMap() {
+  const mapElement = $("#earth-map");
+
+  if (!mapElement || typeof L === "undefined") return;
+
+  if (earthMap) {
+    earthMap.invalidateSize();
+    return;
+  }
+
+  earthMap = L.map(mapElement, {
+    worldCopyJump: true,
+    minZoom: 2,
+    maxZoom: 9
+  }).setView([20, 0], 2);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
+  }).addTo(earthMap);
+
+  fictionalAnomalies.forEach((anomaly) => {
+    const icon = L.divIcon({
+      className: "",
+      html: '<div class="anomaly-marker">✦</div>',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12]
+    });
+
+    const marker = L.marker(anomaly.coords, { icon }).addTo(earthMap);
+
+    marker.bindPopup(
+      `<strong>${anomaly.name}</strong><br>${anomaly.place}<br><small>ANOMALIA FICCIONAL DO VOX</small>`
+    );
+
+    marker.on("click", () => {
+      showMapAnomaly(anomaly);
+    });
+
+    earthMarkers.set(anomaly.id, marker);
+  });
+
+  const info = $("#map-info");
+  if (info) {
+    info.innerHTML =
+      "<strong>MAPA CONECTADO</strong><br>" +
+      "Explore a Terra com zoom e movimentação. Selecione um marcador violeta para investigar uma anomalia fictícia do VOX.";
+  }
+
+  window.setTimeout(() => earthMap?.invalidateSize(), 150);
+}
+
+function showMapAnomaly(anomaly) {
+  const info = $("#map-info");
+  if (!info) return;
+
+  const alreadyFound = completedAnomalies.has(anomaly.id);
+
+  info.innerHTML = `
+    <strong>${anomaly.name}</strong> — ${anomaly.place}<br>
+    ${anomaly.description}<br>
+    <span>Recompensa: ${anomaly.rewardXP} XP · ${anomaly.rewardCredits} créditos</span><br>
+    <button class="primary-button compact" id="investigate-map-anomaly" ${alreadyFound ? "disabled" : ""}>
+      ${alreadyFound ? "ANOMALIA REGISTRADA" : "INVESTIGAR ANOMALIA"}
+    </button>
+  `;
+
+  const button = $("#investigate-map-anomaly");
+  if (!button || alreadyFound) return;
+
+  button.addEventListener("click", async () => {
+    if (completedAnomalies.has(anomaly.id)) return;
+
+    completedAnomalies.add(anomaly.id);
+    progress.anomalies += 1;
+
+    button.disabled = true;
+    button.textContent = "REGISTRADA";
+
+    await addRewards(anomaly.rewardXP, anomaly.rewardCredits);
+
+    info.innerHTML = `
+      <strong>REGISTRO CONCLUÍDO: ${anomaly.name}</strong><br>
+      ${anomaly.description}<br>
+      Recompensa adicionada ao seu progresso.
+    `;
+
+    showToast("Anomalia investigada! Recompensas recebidas.");
+  });
+}
+
+/* =========================================
    NAVEGAÇÃO
 ========================================= */
 
@@ -566,6 +696,11 @@ function navigateTo(pageName) {
   $("#page-heading").textContent = pageTitles[pageName] || "VOX V2";
 
   window.dispatchEvent(new Event("resize"));
+
+  if (pageName === "universe") {
+    initEarthMap();
+    window.setTimeout(() => earthMap?.invalidateSize(), 180);
+  }
 }
 
 document.querySelectorAll(".nav-button").forEach((button) => {
@@ -853,7 +988,6 @@ function createUniverse(group) {
 function initScenes() {
   createScene("eddward-stage", "character");
   createScene("character-stage", isCorrupted ? "corrupted" : "character");
-  createScene("universe-stage", "universe");
 }
 
 function updateCharacterScene() {
